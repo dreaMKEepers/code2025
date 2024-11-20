@@ -43,6 +43,8 @@ public class Practice extends LinearOpMode {
            
         /* Test test test */
 
+        /* I hate goding*/
+
         while (opModeIsActive()) {
             
         
