@@ -19,6 +19,7 @@ public class Practice extends LinearOpMode {
 
         DcMotor liftDCMotor = hardwareMap.get(DcMotor.class, "liftDCMotor");
         CRServo grabServoMotor = hardwareMap.crservo.get("grabServoMotor");
+        CRServo wristServoMotor = hardwareMap.crservo.get("wristServoMotor");
 
         // Set motor directions
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -57,6 +58,17 @@ public class Practice extends LinearOpMode {
                 telemetry.addData("Grab Servo", "Stopped");
             }
 
+            // Wrist motor logic
+            if (gamepad2.dpad_left) {
+                wristServoMotor.setPower(1); // Moves wrist left
+                telemetry.addData("Wrist Servo", "forward");
+            } else if (gamepad2.dpad_right) {
+                wristServoMotor.setPower(-1); // Moves wrist right
+                telemetry.addData("Wrist Motor", "reverse");
+            } else {
+                wristServoMotor.setPower(0); // Stops wrist
+                telemetry.addData("Wrist Servo", "Stopped");
+            }
             // Lift motor example
             if (gamepad2.a) {
                 liftDCMotor.setPower(1); // Move lift up
