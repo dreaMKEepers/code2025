@@ -1,119 +1,75 @@
 package org.firstinspires.ftc.teamcode;
 
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-
-
-
 
 @TeleOp
 public class Practice extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        // Declare our motors
-        // Make sure your ID's match your configuration
+        // Declare motors and servos
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeftMotor");
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRightMotor");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("backRightMotor");
 
+        DcMotor liftDCMotor = hardwareMap.get(DcMotor.class, "liftDCMotor");
+        CRServo grabServoMotor = hardwareMap.crservo.get("grabServoMotor");
 
+        // Set motor directions
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
-        DcMotor liftDcMotor = hardwareMap.get(DcMotor.class, "liftDcMotor");
-        CRServo grabServoMotor = hardwareMap.crservo.get("grabServoMotor");
-        CRServo wristServoMotor = hardwareMap.crservo.get("wristServoMotor");
-
-
         waitForStart();
 
-
-        telemetry.addData("start ", "");
-        if (isStopRequested()) return;
-
         while (opModeIsActive()) {
+            // Mecanum drive logic
+            double y = -gamepad1.left_stick_y; // Inverted Y-axis
+            double x = gamepad1.left_stick_x * 1.1; // Adjust for strafing
+            double rx = gamepad1.right_stick_x;
 
-            telemetry.addData("Curr Position: ", liftDcMotor.getCurrentPosition());
+            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 2); // Adjust speed, LOWING NUMBER = INCRASED SPEED 1 FASTER, 3 SLOWER
+            double frontLeftPower = (y + x + rx) / denominator;
+            double backLeftPower = (y - x + rx) / denominator;
+            double frontRightPower = (y - x - rx) / denominator;
+            double backRightPower = (y + x - rx) / denominator;
 
-            /* Drive Code */
+            frontLeftMotor.setPower(frontLeftPower);
+            backLeftMotor.setPower(backLeftPower);
+            frontRightMotor.setPower(frontRightPower);
+            backRightMotor.setPower(backRightPower);
 
-
-            while (gamepad1.dpad_up){
-                frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-                frontRightMotor.setPower(1);
-
-
-                frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-                frontLeftMotor.setPower(1);
+            // Grab motor logic
+            if (gamepad2.left_bumper) {
+                grabServoMotor.setPower(1); // pull blocks in
+                telemetry.addData("Grab Servo", "forward");
+            } else if (gamepad2.right_bumper) {
+                grabServoMotor.setPower(-1); // Move lift down
+                telemetry.addData("Grab Motor", "reverse");
+            } else {
+                grabServoMotor.setPower(0); // Stop the servo motor
+                telemetry.addData("Grab Servo", "Stopped");
             }
 
-            while (gamepad1.dpad_down) {
-                frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-                frontRightMotor.setPower(1);
-
-
-                frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-                frontLeftMotor.setPower(1);
+            // Lift motor example
+            if (gamepad2.a) {
+                liftDCMotor.setPower(1); // Move lift up
+                telemetry.addData("Lift Motor", "Moving Up");
+            } else if (gamepad2.b) {
+                liftDCMotor.setPower(-1); // Move lift down
+                telemetry.addData("Lift Motor", "Moving Down");
+            } else {
+                liftDCMotor.setPower(0); // Stop the lift motor
+                telemetry.addData("Lift Motor", "Stopped");
             }
 
-
-            /* Grab Motor*/
-            while(gamepad2.y) {
-                grabServoMotor.setPower(1);
-                telemetry.addData("gamepad2.y is pressed", gamepad2.y);
-            }
-
-
-            while(gamepad2.a) {
-                grabServoMotor.setPower(-1);
-                telemetry.addData("gamepad2.a is pressed", gamepad2.a);
-            }
-
-
-            /* Lift Motor */
-            while (gamepad2.left_bumper){
-                liftDcMotor.setPower(1);
-                telemetry.addData("Current Position left", liftDcMotor.getCurrentPosition());
-            }
-            while (gamepad2.right_bumper) {
-                liftDcMotor.setPower(-1);
-                telemetry.addData("Current Position right", liftDcMotor.getCurrentPosition());
-            }
-
-
-
-
-            /* Wrist Motor */
-            // while (gamepad2.left_trigger){
-            //     wristServoMotor.setDirection(0);
-            //     telemetry.addData("wrist move left", liftDcMotor.getCurrentPosition());
-            // }
-            // while (gamepad2.right_trigger) {
-            //     wristServoMotor.setDirection(1);
-            //   telemetry.addData("wrist move right", actuator.getCurrentPosition());
-            // }
-            liftDcMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            int currentPosition = liftDcMotor.getCurrentPosition();
-            liftDcMotor.setPower(0);
-            // actuator.setTargetPosition();
-            // actuator.setPosition(0.5);
-            // public static final DcMotor.ZeroPowerBehavior BRAKE
-            // look into while loops
-            telemetry.addData("Current Position ", liftDcMotor.getCurrentPosition());
+            telemetry.update();
         }
-
-        telemetry.update();
-
-    } // end opModeActive loop
-
+    }
 }
