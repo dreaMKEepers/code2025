@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.CRServoImpl;
+
 
 @TeleOp
 public class Practice extends LinearOpMode {
@@ -60,15 +62,17 @@ public class Practice extends LinearOpMode {
 
             // Wrist motor logic
             if (gamepad2.dpad_left) {
-                wristServoMotor.setPower(1); // Moves wrist left
-                telemetry.addData("Wrist Servo", "forward");
+                wristServoMotor.setPower(0.5); // Moves wrist left
+                telemetry.addData("Wrist Servo", "0.5");
             } else if (gamepad2.dpad_right) {
-                wristServoMotor.setPower(-1); // Moves wrist right
+                wristServoMotor.setPower(-0.5); // Moves wrist right
                 telemetry.addData("Wrist Motor", "reverse");
             } else {
                 wristServoMotor.setPower(0); // Stops wrist
                 telemetry.addData("Wrist Servo", "Stopped");
             }
+
+
             // Lift motor example
             if (gamepad2.a) {
                 liftDCMotor.setPower(1); // Move lift up
