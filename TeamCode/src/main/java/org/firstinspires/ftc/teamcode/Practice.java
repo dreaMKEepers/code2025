@@ -29,7 +29,8 @@ public class Practice extends LinearOpMode {
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        liftDCMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        DcMotor.RunMode RUN_TO_POSITION;
+//        liftDCMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
 
@@ -76,6 +77,11 @@ public class Practice extends LinearOpMode {
 
 
             // Lift motor example
+            if(gamepad1.x) {
+                liftDCMotor.setPower(-1);
+                liftDCMotor.setTargetPosition(-290);
+                telemetry.addData("SetTargetPosition", "Is on");
+            }
             if (gamepad2.a) {
                 liftDCMotor.setPower(1); // Move lift up
                 telemetry.addData("Lift Motor", "Moving Up");
@@ -83,8 +89,9 @@ public class Practice extends LinearOpMode {
                 liftDCMotor.setPower(-1); // Move lift down
                 telemetry.addData("Lift Motor", "Moving Down");
             } else {
-                liftDCMotor.setPower(0); // Stop the lift motor
+                // liftDCMotor.setPower(0); // Stop the lift motor
                 telemetry.addData("Lift Motor", "Stopped");
+                telemetry.addData("Current Position", liftDCMotor.getCurrentPosition());
             }
 
             telemetry.update();
