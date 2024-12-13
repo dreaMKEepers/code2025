@@ -22,6 +22,7 @@ public class Practice extends LinearOpMode {
         DcMotor liftDCMotor = hardwareMap.get(DcMotor.class, "liftDCMotor");
         CRServo grabServoMotor = hardwareMap.crservo.get("grabServoMotor");
         CRServo wristServoMotor = hardwareMap.crservo.get("wristServoMotor");
+        CRServo brakeServoMotor = hardwareMap.crservo.get("brakeServoMotor");
 
         // Set motor directions
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -41,6 +42,12 @@ public class Practice extends LinearOpMode {
             double rx = gamepad1.right_stick_x;
 
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 2); // Adjust speed, LOWING NUMBER = INCRASED SPEED 1 FASTER, 3 SLOWER
+
+            //dash code
+            if (gamepad1.a) {
+                denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1); // Adjust speed, LOWING NUMBER = INCRASED SPEED 1 FASTER, 3 SLOWER
+
+            }
             double frontLeftPower = (y + x + rx) / denominator;
             double backLeftPower = (y - x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
@@ -66,10 +73,10 @@ public class Practice extends LinearOpMode {
             // Wrist motor logic
             if (gamepad2.dpad_left) {
                 wristServoMotor.setPower(0.5); // Moves wrist left
-                telemetry.addData("Wrist Servo", "0.5");
+                telemetry.addData("Wrist Servo left ", "");
             } else if (gamepad2.dpad_right) {
                 wristServoMotor.setPower(-0.5); // Moves wrist right
-                telemetry.addData("Wrist Motor", "reverse");
+                telemetry.addData("Wrist Servo right", "");
             } else {
                 wristServoMotor.setPower(0); // Stops wrist
                 telemetry.addData("Wrist Servo", "Stopped");
@@ -77,11 +84,6 @@ public class Practice extends LinearOpMode {
 
 
             // Lift motor example
-            if(gamepad1.x) {
-                liftDCMotor.setPower(-1);
-                liftDCMotor.setTargetPosition(-290);
-                telemetry.addData("SetTargetPosition", "Is on");
-            }
             if (gamepad2.a) {
                 liftDCMotor.setPower(1); // Move lift up
                 telemetry.addData("Lift Motor", "Moving Up");
@@ -89,9 +91,20 @@ public class Practice extends LinearOpMode {
                 liftDCMotor.setPower(-1); // Move lift down
                 telemetry.addData("Lift Motor", "Moving Down");
             } else {
-                // liftDCMotor.setPower(0); // Stop the lift motor
+                liftDCMotor.setPower(0); // Stop the lift motor
                 telemetry.addData("Lift Motor", "Stopped");
-                telemetry.addData("Current Position", liftDCMotor.getCurrentPosition());
+            }
+
+            // brake Motor
+            if (gamepad1.x) {
+                brakeServoMotor.setPower(1);
+                telemetry.addData("Brake Motor", "Left");
+            } else if (gamepad1.b) {
+                brakeServoMotor.setPower(-1);
+                telemetry.addData("Brake Motor", "Right");
+            } else {
+                brakeServoMotor.setPower(0); // Stop the lift motor
+                telemetry.addData("Brake Motor", "Stopped");
             }
 
             telemetry.update();
