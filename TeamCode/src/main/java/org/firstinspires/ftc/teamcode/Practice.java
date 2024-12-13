@@ -24,6 +24,8 @@ public class Practice extends LinearOpMode {
         CRServo wristServoMotor = hardwareMap.crservo.get("wristServoMotor");
         CRServo brakeServoMotor = hardwareMap.crservo.get("brakeServoMotor");
 
+        liftDCMotor.setTargetPosition(-290);
+
         // Set motor directions
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -45,7 +47,6 @@ public class Practice extends LinearOpMode {
             if (gamepad1.a) {
                 denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1); // Adjust speed, LOWING NUMBER = INCRASED SPEED 1 FASTER, 3 SLOWER
                 telemetry.addData("Dash", "ON");
-
             }
             double frontLeftPower = (y + x + rx) / denominator;
             double backLeftPower = (y - x + rx) / denominator;
@@ -96,15 +97,19 @@ public class Practice extends LinearOpMode {
 
             // brake Motor
             if (gamepad1.x) {
-                brakeServoMotor.setPower(1);
-                telemetry.addData("Brake Motor", "Left");
-            } else if (gamepad1.b) {
-                brakeServoMotor.setPower(-1);
-                telemetry.addData("Brake Motor", "Right");
-            } else {
-                brakeServoMotor.setPower(0); // Stop the lift motor
-                telemetry.addData("Brake Motor", "Stopped");
+                liftDCMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                telemetry.addData("Run to position", "Is Running");
             }
+//            if (gamepad1.x) {
+//                brakeServoMotor.setPower(1);
+//                telemetry.addData("Brake Motor", "Left");
+//            } else if (gamepad1.b) {
+//                brakeServoMotor.setPower(-1);
+//                telemetry.addData("Brake Motor", "Right");
+//            } else {
+//                brakeServoMotor.setPower(0); // Stop the lift motor
+//                telemetry.addData("Brake Motor", "Stopped");
+//            }
 
             telemetry.update();
         }
