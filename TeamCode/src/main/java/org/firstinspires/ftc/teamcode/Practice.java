@@ -24,15 +24,12 @@ public class Practice extends LinearOpMode {
         CRServo wristServoMotor = hardwareMap.crservo.get("wristServoMotor");
         CRServo brakeServoMotor = hardwareMap.crservo.get("brakeServoMotor");
 
-        liftDCMotor.setTargetPosition(-290);
-
         // Set motor directions
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        DcMotor.RunMode RUN_TO_POSITION;
         liftDCMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
@@ -85,7 +82,6 @@ public class Practice extends LinearOpMode {
                 telemetry.addData("Wrist Servo", "Stopped");
             }
 
-
             // Lift motor example
             if (gamepad2.a) {
                 liftDCMotor.setPower(1); // Move lift up
@@ -96,13 +92,6 @@ public class Practice extends LinearOpMode {
             } else {
                 liftDCMotor.setPower(0); // Stop the lift motor
                 telemetry.addData("Lift Motor", "Stopped");
-            }
-
-            // brake Motor
-            if (gamepad1.x) {
-                liftDCMotor.setPower(-1);
-                liftDCMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                telemetry.addData("Run to position", "Is Running");
             }
 
             telemetry.update();
