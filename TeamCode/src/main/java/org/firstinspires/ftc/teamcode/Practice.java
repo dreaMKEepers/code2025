@@ -30,8 +30,6 @@ public class Practice extends LinearOpMode {
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        DcMotor.RunMode RUN_TO_POSITION;
-//        liftDCMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
 
@@ -46,6 +44,7 @@ public class Practice extends LinearOpMode {
             //dash code
             if (gamepad1.a) {
                 denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1); // Adjust speed, LOWING NUMBER = INCRASED SPEED 1 FASTER, 3 SLOWER
+                telemetry.addData("Dash", "ON");
 
             }
             double frontLeftPower = (y + x + rx) / denominator;
