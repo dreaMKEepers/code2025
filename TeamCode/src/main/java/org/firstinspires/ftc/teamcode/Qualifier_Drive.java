@@ -5,11 +5,10 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.CRServoImpl;
 
 
 @TeleOp
-public class Practice extends LinearOpMode {
+public class Qualifier_Drive extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -30,7 +29,7 @@ public class Practice extends LinearOpMode {
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        liftDCMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // liftDCMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
 
